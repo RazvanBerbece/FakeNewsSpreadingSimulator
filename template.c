@@ -451,30 +451,34 @@ int originateOrforwardNews(Account * account) {
   if (account -> accType == 1)
     if (numberNewRealStories < MaxNewRealStory) {
       char * newStory = aRealStory();
-      if (!isSent(account, newStory))
+      while(isSent(account, newStory))
       {
-        for (int i = 0; i < account -> numFriends; ++i) {
+	strcpy(newStory, aRealStory());
+      }
+        for (int i = 0; i < account -> numFriends; ++i) 
+	{
           sendStory(newStory, account, account -> Friends[i]);
           sentMessages++;
         }
-numberNewRealStories++;
-      }
+	numberNewRealStories++;
     }
   else if (account -> accType == 2)
     if (numberNewFakeStories < MaxNewFakeStory) {
       char * newStory = aFakeStory();
-      if (!isSent(account, newStory))
+      while(isSent(account, newStory)) 
       {
-        for (int i = 0; i < account -> numFriends; ++i) {
+	strcpy(newStory, aFakeStory());
+      }
+        for (int i = 0; i < account -> numFriends; ++i) 
+	{
           sendStory(newStory, account, account -> Friends[i]);
           sentMessages++;
         }
-numberNewFakeStories++;
-      }
+	numberNewFakeStories++;
     }
   else if (account -> accType == 3) {
     for (int i = 0; i < account -> numberReceivedM; ++i) {
-      if (account -> receivedM[i].isRead == 0) {
+      if (account -> receivedM[i].isRead = 0) {
         account -> receivedM[i].isRead = 1;
         if (!isSent(account, account -> receivedM[i].theStory))
           for (int j = 0; j < account -> numFriends; ++j) {
@@ -485,7 +489,7 @@ numberNewFakeStories++;
     }
   } else if (account -> accType == 4) {
     for (int i = 0; i < account -> numberReceivedM; ++i) {
-      if (account -> receivedM[i].isRead == 0) {
+      if (account -> receivedM[i].isRead = 0) {
         account -> receivedM[i].isRead = 1;
         if (!isSent(account, account -> receivedM[i].theStory) && !isFakeStory(account -> receivedM[i].theStory))
           for (int j = 0; j < account -> numFriends; ++j) {
@@ -497,7 +501,7 @@ numberNewFakeStories++;
   } else if (account -> accType == 5) {
 
     for (int i = 0; i < account -> numberReceivedM; ++i) {
-      if (account -> receivedM[i].isRead == 0) {
+      if (account -> receivedM[i].isRead = 0) {
         account -> receivedM[i].isRead = 1;
         if (!isSent(account, account -> receivedM[i].theStory) && !isFakeStory(account -> receivedM[i].theStory))
           for (int j = 0; j < account -> numFriends; ++j) {
@@ -518,11 +522,11 @@ numberNewFakeStories++;
 // always returns 1
 // my implementation is 13 lines
 int simulate() {
-  while (theServer.numberPendingMessages) {
+  do {
     for (int i = 0; i < NumberAccounts; ++i)
       originateOrforwardNews(AllAccounts[i]);
     transmitAllMessages();
-  }
+  } while (theServer.numberPendingMessages);
   return 1;
 }
 
